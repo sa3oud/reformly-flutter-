@@ -1,0 +1,25 @@
+# Find this block in lib/shopify.ts:
+#
+#   const res = await fetch(
+#     `https://${SHOPIFY_STORE_DOMAIN}/api/${API_VERSION}/graphql.json`,
+#     {
+#       method: 'POST',
+#       headers: { ... },
+#       body: JSON.stringify({ query, variables }),
+#     }
+#   )
+#
+# Replace the options object with this:
+
+  const res = await fetch(
+    `https://${SHOPIFY_STORE_DOMAIN}/api/${API_VERSION}/graphql.json`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN,
+      },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate: 60 }, // ISR — revalidate every 60s
+    }
+  )
